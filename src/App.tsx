@@ -2,6 +2,7 @@ import { ReactElement } from "react";
 import { King, Pawn } from "./Pieces";
 import { isEqualCoord } from "./util";
 import clsx from "clsx";
+import { Square } from "./Square";
 
 const pieceLookup: {
   [Key in PieceType]: () => ReactElement;
@@ -19,18 +20,10 @@ function renderSquares(pieces: PieceRecord[]) {
         isEqualCoord(piece.location, squareCoord)
       );
 
-      const isDark = (row + col) % 2 === 1;
-
       squares.push(
-        <div
-          key={`${row}-${col}`}
-          className={clsx(
-            "w-full h-full flex items-center justify-center",
-            isDark ? "bg-gray-200" : "bg-gray-50"
-          )}
-        >
+        <Square key={`${row}-${col}`} location={[row, col]}>
           {piece && pieceLookup[piece.type]()}
-        </div>
+        </Square>
       );
     }
   }
