@@ -1,14 +1,13 @@
 import { ReactElement } from "react";
 import { King, Pawn } from "./Pieces";
 import { isEqualCoord } from "./util";
-import clsx from "clsx";
 import { Square } from "./Square";
 
 const pieceLookup: {
-  [Key in PieceType]: () => ReactElement;
+  [Key in PieceType]: (location: Coord) => ReactElement;
 } = {
-  king: () => <King />,
-  pawn: () => <Pawn />,
+  king: (location) => <King location={location} />,
+  pawn: (location) => <Pawn location={location} />,
 };
 
 function renderSquares(pieces: PieceRecord[]) {
@@ -21,8 +20,8 @@ function renderSquares(pieces: PieceRecord[]) {
       );
 
       squares.push(
-        <Square key={`${row}-${col}`} location={[row, col]}>
-          {piece && pieceLookup[piece.type]()}
+        <Square key={`${row}-${col}`} location={squareCoord} pieces={pieces}>
+          {piece && pieceLookup[piece.type](squareCoord)}
         </Square>
       );
     }

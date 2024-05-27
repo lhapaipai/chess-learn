@@ -4,12 +4,14 @@ import pawnSrc from "./assets/pawn.png";
 import { draggable } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
 import clsx from "clsx";
 
-type PieceProps = {
+type BasePieceProps = {
+  location: Coord;
+  pieceType: PieceType;
   image: string;
   alt: string;
 };
 
-function Piece({ image, alt }: PieceProps) {
+function Piece({ location, pieceType, image, alt }: BasePieceProps) {
   const ref = useRef<HTMLImageElement>(null!);
   const [dragging, setDragging] = useState(false);
 
@@ -17,11 +19,12 @@ function Piece({ image, alt }: PieceProps) {
     const el = ref.current;
 
     return draggable({
+      getInitialData: () => ({ location, pieceType }),
       element: el,
       onDragStart: () => setDragging(true),
       onDrop: () => setDragging(false),
     });
-  }, []);
+  }, [location, pieceType]);
 
   return (
     <img
@@ -36,10 +39,18 @@ function Piece({ image, alt }: PieceProps) {
   );
 }
 
-export function King() {
-  return <Piece image={kingSrc} alt="King" />;
+interface PieceProps {
+  location: Coord;
 }
 
-export function Pawn() {
-  return <Piece image={pawnSrc} alt="Pawn" />;
+export function King({ location }: PieceProps) {
+  return (
+    <Piece image={kingSrc} alt="King" location={location} pieceType="king" />
+  );
+}
+
+export function Pawn({ location }: PieceProps) {
+  return (
+    <Piece image={pawnSrc} alt="Pawn" location={location} pieceType="pawn" />
+  );
 }
